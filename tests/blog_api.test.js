@@ -88,7 +88,7 @@ test('blog without title is not added', async () => {
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
   })
 
-  test('blog without url is not added and returns 400', async () => {
+  test('blog without url', async () => {
     const newBlog = {
       title: "Blog without url",
       author: "Author",
@@ -102,6 +102,39 @@ test('blog without title is not added', async () => {
   
     const blogsAtEnd = await helper.blogsInDb()
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+  })
+
+  test('blog deleted', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+  
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+  
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1)
+  
+    const titles = blogsAtEnd.map(r => r.title)
+    assert.strictEqual(titles.includes(blogToDelete.title), false)
+  })
+
+  test('blog updated', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+  
+    const updatedBlogData = {
+      likes: blogToUpdate.likes + 1
+    }
+  
+    const response = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedBlogData)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  
+    const updatedBlog = response.body
+    assert.strictEqual(updatedBlog.likes, blogToUpdate.likes + 1)
   })
 
 after(async () => {
