@@ -1,12 +1,36 @@
 POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWQiOiI2NzY0YjhlNjcyNmUyNTk5ZWM4NDA2ZjkiLCJpYXQiOjE3MzQ2NTQ0MjV9.eVCJNn4BSYGhYtT3-YrvsT48C9cEYn8z3POz6-qL4U8
+
+{
+  "title": "post",
+  "author": "kfkfk",
+  "url": "kkd",
+  "likes": 6
+}
+###
+POST http://localhost:3003/api/users
 content-type: application/json
 
 {
-    "title": "hhahha",
-    "author": "kfkfk",
-    "url": "kkd",
-    "likes": "6"
+    "username": "testuser",
+    "name": "Taka taka",
+    "password": "pass"
 }
 ###
 
 GET http://localhost:3003/api/blogs
+
+###
+POST http://localhost:3003/api/login
+content-type: application/json
+
+{
+    "username": "testuser",
+    "password": "pass"
+}
+
+###
+DELETE http://localhost:3003/api/blogs/6764be73f87447f1fe6464f2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWQiOiI2NzY0YjhlNjcyNmUyNTk5ZWM4NDA2ZjkiLCJpYXQiOjE3MzQ2NTQ0MjV9.eVCJNn4BSYGhYtT3-YrvsT48C9cEYn8z3POz6-qL4U8
