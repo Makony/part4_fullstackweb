@@ -12,12 +12,22 @@ const loginRouter = require('./controllers/login')
 
 mongoose.set('strictQuery', false)
 
-mongoose.connect(config.MONGODB_URI)
+const MONGODB_URI = process.env.NODE_ENV === 'test'
+  ? process.env.TEST_MONGODB_URI
+  : process.env.MONGODB_URI
+
+  if (!MONGODB_URI) {
+    console.error('MONGODB_URI is not defined');
+    process.exit(1);
+  }
+  
+
+  mongoose.connect(MONGODB_URI)
   .then(() => {
-    logger.info('connected to MongoDB')
+    console.log('connected to MongoDB')
   })
   .catch((error) => {
-    logger.error('error connecting to MongoDB:', error.message)
+    console.error('error connecting to MongoDB:', error.message)
   })
 
 app.use(cors())
@@ -29,6 +39,11 @@ app.use(middleware.tokenExtractor)
 app.use('/api/login', loginRouter)
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
+
+if (process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/testing')
+  app.use('/api/testing', testingRouter)
+}
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
